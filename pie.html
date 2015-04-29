@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: A true bar chart with SVG rects</title>
+      <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var w = 380;
+			var h = 380;
+			
+			var dataset = [
+			{type: "ยาบ้า", per: 15},
+			{type: "เหล้า", per: 40},
+			{type: "บุหรี่", per: 30},
+			{type: "กัญชา", per: 10},
+			{type: "เฮโรอีน", per: 5}];
+		      
+			   var outerRadius = (w / 2)-40;
+			   var center = (w / 2);
+			   var innerRadius = 0;
+			   var arc = d3.svg.arc()
+							.innerRadius(innerRadius)
+							.outerRadius(outerRadius);
+			   var pie = d3.layout.pie()
+			   .value(function(d) { return d. per; });
+			   var color = d3.scale.category10();
+			   var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+				//Set up groups
+				var arcs = svg.selectAll("g.arc")
+						  .data(pie(dataset))
+						  .enter()
+						  .append("g")
+						  .attr("class", "arc")
+						  .attr("transform", "translate(" + center + "," + center + ")");
+						  //ต้องเลื่อนเพราะจุดกลางรัศมีมันเป็น (0,0)
+			
+				//Draw arc paths
+				arcs.append("path")
+			    .attr("fill", function(d, i) {
+			    	return color(i);
+			    })
+			    .attr("d", arc);
+			
+			    //Labels
+				arcs.append("text")
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";  //จุดกึ่งกลาง
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d) {
+			    	return d.data.type;
+			    });
+
+				</script>
+				<p>แสดงกราฟเปอร์เซ็นของประเภทยาเสพติดที่นักศึกษาเสพ</p> 
+	</body>
+</html>
