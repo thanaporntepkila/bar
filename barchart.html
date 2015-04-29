@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: A true bar chart with SVG rects</title>
+      <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//Width and height
+			var w = 450;
+			var h = 350;
+			var padding = 50;
+			var padding2 = 20;
+			
+			var dataset = [ 69.58, 45.32, 40.6, 32.72, 59.03, 63.11, 74.16, 77.00 ];
+			var xLabels = d3.time.scale().domain([new Date(2550, 0, 0), new Date(2557,12 , 0)]).range([w/9-w/9/2,w]);
+		//	var xScale = d3.scale.linear()
+		//						 .domain([0, d3.max(dataset, function(d) { return d; })])
+		//						 .range([padding, w - padding ]);
+
+			var xScale = d3.scale.linear()
+								 .domain([0, dataset.length])
+								 .range([w/9-w/9/2, w-padding]);
+								 
+								 
+			//Define X axis
+			var xAxis = d3.svg.axis()
+							  .scale(xScale)
+							  .orient("bottom")
+							  .ticks('')
+							  //.tickSize(0)
+							  .tickFormat('');
+							  
+							  
+
+			
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+
+			svg.selectAll("rect")
+			   .data(dataset)
+			   .enter()
+			   .append("rect")
+			   .attr("x", function(d, i) {
+			   		return (i * 41)+padding;
+			   })
+			   .attr("y", function(d) {
+			   		return h - (d*4)- padding2;   //ทำเพื่อให้กราฟกลับหัว
+			   })
+			   .attr("width", 40)
+			   .attr("height", function(d) {
+			   		return (d * 4 );
+			   })
+			 
+			   .attr("fill", "#CC6666");
+			   
+			svg.selectAll("text")
+				.data(dataset)
+				.enter()
+				.append("text")
+				.text(function(d) {
+					return d;
+				})
+				.attr("x", function(d, i) {
+					return (i * 41)+17+padding ;
+				})
+				.attr("y", function(d) {
+					return h - (d * 4) +20 -padding2;
+				})
+   
+				.attr("font-family", "sans-serif")
+				.attr("font-size", "11px")
+				.attr("fill", "white")
+				.attr("text-anchor", "middle");
+				
+			//Create X axis
+			svg.append("g")
+				.attr("class", "axis")
+				.attr("transform", "translate(0," + (h - padding2) + ")")
+				.call(xAxis);
+			
+			
+		</script>
+		<p>แสดงกราฟจำนวนนักศึกษาที่ติดยาตั้งแต่ปี  2550-2557 ( หน่วยต่อ 10,000 คน)</p> 
+	</body>
+</html>
